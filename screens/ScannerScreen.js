@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { API_URL } from "@env";
+import { useSelector } from "react-redux";
+import { selectToken } from "../slices/navSlice";
+import axios from "axios";
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const jwt = useSelector(selectToken);
 
   useEffect(() => {
     (async () => {
@@ -13,9 +18,27 @@ export default function Scanner() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+    const BikeId = "12345";
+    await axios
+      .get(`${API_URL}/Bike/UnLock?BikeId=${BikeId}`, config)
+      .then((res) => {
+        if (res.data.resultTypeId === 200) {
+          console.log("sur amk");
+          console.log(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   if (hasPermission === null) {

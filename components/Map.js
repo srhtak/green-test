@@ -6,6 +6,7 @@ import {
   Image,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
@@ -14,6 +15,7 @@ import {
   selectOrigin,
   selectDestination,
   setDestination,
+  selectToken,
 } from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
@@ -27,6 +29,7 @@ export default function Map() {
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
+  const data = useSelector(selectToken);
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const [distance, setDistance] = useState(0);
@@ -42,6 +45,7 @@ export default function Map() {
   }, [origin]);
 
   const selectLocation = (region) => {
+    console.log(data.token);
     mapRef.current.animateToRegion({
       latitude: region.lat,
       longitude: region.lng,
@@ -75,6 +79,8 @@ export default function Map() {
         style={styles.map}
         mapType="mutedStandard"
         showsUserLocation={true}
+        showsMyLocationButton={true}
+        loadingEnabled={true}
         onUserLocationChange={(e) => {
           dispatch(
             setOrigin({
@@ -117,8 +123,8 @@ export default function Map() {
         {Locations.map((location, i) => (
           <Marker
             coordinate={{
-              latitude: origin.location.lat + (0.001 * i) / 2,
-              longitude: origin.location.lng + (0.001 * i) / 2,
+              latitude: origin.location.lat + (0.011 * -i) / 2,
+              longitude: origin.location.lng + (0.01 * -i) / 2,
               latitudeDelta: 0.007,
               longitudeDelta: ASPECT_RATIO * 0.007,
               draggable: true,

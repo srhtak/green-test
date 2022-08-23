@@ -10,6 +10,7 @@ const initialState = {
   destination: null,
   travelTimeInformation: null,
   token: null,
+  isLiveTracking: true,
 };
 
 export const navSlice = createSlice({
@@ -28,6 +29,9 @@ export const navSlice = createSlice({
     setAuthToken: (state, action) => {
       state.token = action.payload;
     },
+    setIsTracking(state, action) {
+      state.isLiveTracking = action.payload;
+    },
   },
 });
 
@@ -41,5 +45,6 @@ export const {
 export const selectOrigin = (state) => state.nav.origin;
 export const selectDestination = (state) => state.nav.destination;
 export const selectToken = (state) => state.nav.token;
+export const selectTracking = (state) => state.nav.isLiveTracking;
 
 export default navSlice.reducer;

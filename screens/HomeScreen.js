@@ -11,10 +11,20 @@ import {
   ScrollView,
 } from "react-native";
 import Map from "../components/Map";
+import Tracking from "../components/Tracking";
+import {
+  setOrigin,
+  selectOrigin,
+  selectDestination,
+  setDestination,
+  selectTracking,
+} from "../slices/navSlice";
+import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const isTracking = useSelector(selectTracking);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -24,9 +34,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.Map}>
-          <Map />
-        </View>
+        <View style={styles.Map}>{isTracking ? <Tracking /> : <Map />}</View>
       </View>
     </SafeAreaView>
   );

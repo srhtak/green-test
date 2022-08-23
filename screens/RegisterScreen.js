@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 export default function HomeScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -28,13 +29,19 @@ export default function HomeScreen() {
   }, []);
 
   const onSubmit = async (values) => {
+    setIsLoading(true);
     const response = await axios
       .post(`${API_URL}/Account/Register`, values)
       .then((res) => {
-        console.log(res.data);
+        if (res.status === 200) {
+          dispatch(setAuthToken({ token: `${res.data.value.token}` }));
+          navigation.navigate("Home");
+          setIsLoading(false);
+        }
       })
       .catch((err) => {
         console.log(err.data);
+        setIsLoading(false);
       });
   };
 
@@ -81,13 +88,11 @@ export default function HomeScreen() {
       >
         {({
           handleChange,
-          handleBlur,
           handleSubmit,
           values,
           touched,
           errors,
           setFieldTouched,
-          isValid,
           isSubmitting,
         }) => (
           <View style={styles.container}>
@@ -199,7 +204,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flexDirection: "column",
-    justifyContent: "",
   },
   title: {
     color: "#006d77",

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
@@ -7,16 +7,19 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { API_URL } from "@env";
 import axios from "axios";
+import { setAuthToken } from "../slices/navSlice";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -26,18 +29,23 @@ export default function HomeScreen() {
 
   const onSubmit = async (values) => {
     try {
-      const response = await axios
+      setIsLoading(true);
+      await axios
         .post(`${API_URL}/Account/Login`, values)
         .then((res) => {
           if (res.status === 200) {
+            dispatch(setAuthToken({ token: `${res.data.value.token}` }));
             navigation.navigate("Home");
           }
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err.data);
+          setIsLoading(false);
         });
     } catch (err) {
       console.log(err.data);
+      setIsLoading(false);
     }
   };
 
@@ -98,13 +106,17 @@ export default function HomeScreen() {
                 {errors.password}
               </Text>
             )}
-            <TouchableOpacity
-              disabled={!isValid}
-              onPress={() => handleSubmit()}
-              style={styles.submitButton}
-            >
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <TouchableOpacity
+                disabled={!isValid}
+                onPress={() => handleSubmit()}
+                style={styles.submitButton}
+              >
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("Register");
@@ -128,7 +140,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flexDirection: "column",
-    justifyContent: "",
   },
   title: {
     color: "#006d77",
