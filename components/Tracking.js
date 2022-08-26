@@ -4,33 +4,25 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Button,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import MapView, {
-  Callout,
-  Circle,
-  Polyline,
-  Marker,
-  PROVIDER_GOOGLE,
-} from "react-native-maps";
-import { setOrigin, selectOrigin, selectToken } from "../slices/navSlice";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { setOrigin, selectOrigin } from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import cloneDeep from "lodash.clonedeep";
 import haversine from "haversine";
+import { useNavigation } from "@react-navigation/native";
 export default function Map() {
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
-  const data = useSelector(selectToken);
+  const navigation = useNavigation();
   const mapRef = useRef(null);
   const [prevLocation, setPrevLocation] = useState(cloneDeep(origin));
-  const [nextLocation, setNextLocation] = useState(cloneDeep(origin));
   const [distance, setDistance] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -175,7 +167,12 @@ export default function Map() {
           </Text>
           <Text style={styles.info}>Distane:{distance.toFixed(2)} km</Text>
         </View>
-        <TouchableOpacity style={styles.stop}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Camera");
+          }}
+          style={styles.stop}
+        >
           <Text styles={{ fontWeight: "bold" }}>Finish the Ride</Text>
         </TouchableOpacity>
       </View>
