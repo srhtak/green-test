@@ -24,7 +24,7 @@ import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useNavigation } from "@react-navigation/native";
 export default function Map() {
   const navigation = useNavigation();
-  const Locations = new Array(6).fill(1).map((_, i) => `Bicycle ${i + 1}`);
+  const Locations = new Array(30).fill(1).map((_, i) => `Bicycle ${i + 1}`);
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
@@ -45,7 +45,6 @@ export default function Map() {
   }, [origin]);
 
   const selectLocation = (region) => {
-    console.log(data.token);
     mapRef.current.animateToRegion({
       latitude: region.lat,
       longitude: region.lng,
@@ -123,8 +122,8 @@ export default function Map() {
         {Locations.map((location, i) => (
           <Marker
             coordinate={{
-              latitude: origin.location.lat + (0.011 * -i) / 2,
-              longitude: origin.location.lng + (0.01 * -i) / 2,
+              latitude: origin.location.lat + (0.001 * -i) / 2,
+              longitude: origin.location.lng + (0.001 * -i) / 2,
               latitudeDelta: 0.007,
               longitudeDelta: ASPECT_RATIO * 0.007,
               draggable: true,
@@ -142,7 +141,7 @@ export default function Map() {
             key={i}
             description={origin.description}
           >
-            <Image source={require("../assets/bicycle.png")} />
+            <Image source={require("../assets/marker.png")} />
             <Callout>
               <Text>{location}</Text>
             </Callout>

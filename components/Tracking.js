@@ -9,12 +9,19 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import MapView, { Callout, Circle, Marker } from "react-native-maps";
+import MapView, {
+  Callout,
+  Circle,
+  Polyline,
+  Marker,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { setOrigin, selectOrigin, selectToken } from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
+import cloneDeep from "lodash.clonedeep";
 import haversine from "haversine";
 export default function Map() {
   const { width, height } = Dimensions.get("window");
@@ -22,10 +29,13 @@ export default function Map() {
   const origin = useSelector(selectOrigin);
   const data = useSelector(selectToken);
   const mapRef = useRef(null);
+  const [prevLocation, setPrevLocation] = useState(cloneDeep(origin));
+  const [nextLocation, setNextLocation] = useState(cloneDeep(origin));
+  const [distance, setDistance] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const markerRef = useRef(null);
   const dispatch = useDispatch();
-  const [destination, setDestination] = useState({
-    ...origin.location,
-  });
 
   useEffect(() => {
     mapRef.current.animateToRegion({
@@ -34,43 +44,18 @@ export default function Map() {
       latitudeDelta: 0.007,
       longitudeDelta: ASPECT_RATIO * 0.007,
     });
+    const totalDistance = haversine(
+      {
+        latitude: prevLocation.location.lat,
+        longitude: prevLocation.location.lng,
+      },
+      { latitude: origin.location.lat, longitude: origin.location.lng },
+      { unit: "km" }
+    );
+    setDistance(totalDistance);
   }, [origin]);
 
-  const getLocationAsync = async () => {
-    // watchPositionAsync Return Lat & Long on Position Change
-    const location = await Location.watchPositionAsync(
-      {
-        accuracy: 6,
-        distanceInterval: 15,
-        timeInterval: 10000,
-      },
-      (newLocation) => {
-        let { coords } = newLocation;
-        setDestination({
-          location: {
-            lat: coords.latitude,
-            lng: coords.longitude,
-          },
-        });
-        let region = {
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-          latitudeDelta: 0.045,
-          longitudeDelta: 0.045,
-        };
-        //this.setState({ region: region });
-      },
-      (error) => console.log(error)
-    );
-    return location;
-  };
-
-  useEffect(() => {
-    getLocationAsync();
-  });
-
   const selectLocation = (region) => {
-    console.log(data.token);
     mapRef.current.animateToRegion({
       latitude: region.lat,
       longitude: region.lng,
@@ -78,6 +63,21 @@ export default function Map() {
       longitudeDelta: ASPECT_RATIO * 0.007,
     });
   };
+  useEffect(() => {
+    let myInterval = setInterval(() => {
+      if (seconds >= 0) {
+        setSeconds(seconds + 1);
+        if (seconds === 59) {
+          setMinutes(minutes + 1);
+          setSeconds(0);
+        }
+      }
+    }, 800);
+
+    return () => {
+      clearInterval(myInterval);
+    };
+  });
 
   useEffect(() => {
     (async () => {
@@ -96,20 +96,47 @@ export default function Map() {
           },
         })
       );
+      setPrevLocation(cloneDeep(origin));
+
+      let asyncLocations = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          distanceInterval: 2000,
+        },
+        (location) => {
+          dispatch(
+            setOrigin({
+              location: {
+                lat: location.coords.latitude,
+                lng: location.coords.longitude,
+              },
+            })
+          );
+        }
+      );
     })();
   }, []);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
-        <Text>Start</Text>
-      </TouchableOpacity>
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         mapType="mutedStandard"
-        showsUserLocation={true}
         showsMyLocationButton={true}
+        showsUserLocation={true}
         followsUserLocation
         loadingEnabled={true}
+        onUserLocationChange={(e) => {
+          dispatch(
+            setOrigin({
+              location: {
+                lat: e.nativeEvent.coordinate.latitude,
+                lng: e.nativeEvent.coordinate.longitude,
+              },
+            })
+          );
+        }}
         initialRegion={{
           latitude: origin.location.lat,
           longitude: origin.location.lng,
@@ -119,23 +146,39 @@ export default function Map() {
         }}
         ref={mapRef}
       >
+        <Marker
+          coordinate={{
+            latitude: origin.location.lat,
+            longitude: origin.location.lng,
+          }}
+        >
+          <Image source={require("../assets/rider.png")} />
+        </Marker>
         <MapViewDirections
           origin={{
-            latitude: 37.33067347778918,
-            longitude: -122.03006671862121,
+            latitude: prevLocation.location.lat,
+            longitude: prevLocation.location.lng,
           }}
           destination={{
-            latitude: destination.lat,
-            longitude: destination.lng,
+            latitude: origin.location.lat,
+            longitude: origin.location.lng,
           }}
           apikey={GOOGLE_MAPS_APIKEY}
           strokeColor="green"
-          strokeWidth={4}
-          onReady={(result) => {
-            console.log(result.distance);
-          }}
+          strokeWidth={3}
         />
       </MapView>
+      <View style={styles.card}>
+        <View style={styles.wrap_info}>
+          <Text style={styles.info}>
+            Timer: {minutes}:{seconds < 10 ? "0" + seconds : seconds}
+          </Text>
+          <Text style={styles.info}>Distane:{distance.toFixed(2)} km</Text>
+        </View>
+        <TouchableOpacity style={styles.stop}>
+          <Text styles={{ fontWeight: "bold" }}>Finish the Ride</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -147,5 +190,41 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  card: {
+    backgroundColor: "#006d77",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: "16%",
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: "5%",
+  },
+  wrap_info: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    height: "60%",
+    width: "100%",
+  },
+  info: {
+    color: "white",
+    fontSize: 20,
+    justifyContent: "flex-start",
+  },
+  stop: {
+    backgroundColor: "red",
+    flex: 1,
+    height: "30%",
+    width: "80%",
+    backgroundColor: "white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: "5%",
+    borderRadius: 6,
   },
 });
