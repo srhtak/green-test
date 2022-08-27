@@ -169,7 +169,7 @@ export default function Map() {
         </View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Camera");
+            navigation.navigate("BikeInfo");
           }}
           style={styles.stop}
         >
