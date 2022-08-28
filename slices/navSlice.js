@@ -7,6 +7,14 @@ const initialState = {
       lng: 43.2715308,
     },
   },
+  NewInvoice: {
+    userClientId: 0,
+    bikeId: 0,
+    packageId: 0,
+    distance: 0,
+    time: 0,
+    rate: 0,
+  },
   destination: null,
   travelTimeInformation: null,
   token: null,
@@ -32,6 +40,9 @@ export const navSlice = createSlice({
     setIsTracking(state, action) {
       state.isLiveTracking = action.payload;
     },
+    setInvoice(state, action) {
+      state.NewInvoice = { ...state.NewInvoice, ...action.payload };
+    },
   },
 });
 
@@ -40,11 +51,13 @@ export const {
   setDestination,
   setTravelTimeInformation,
   setAuthToken,
+  setInvoice,
 } = navSlice.actions;
 
 export const selectOrigin = (state) => state.nav.origin;
 export const selectDestination = (state) => state.nav.destination;
 export const selectToken = (state) => state.nav.token;
 export const selectTracking = (state) => state.nav.isLiveTracking;
+export const selectInvoice = (state) => state.nav.NewInvoice;
 
 export default navSlice.reducer;

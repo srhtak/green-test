@@ -8,7 +8,12 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { setOrigin, selectOrigin } from "../slices/navSlice";
+import {
+  setOrigin,
+  selectOrigin,
+  selectInvoice,
+  setInvoice,
+} from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
@@ -26,6 +31,7 @@ export default function Map() {
   const [distance, setDistance] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const invoice = useSelector(selectInvoice);
   const markerRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -109,6 +115,17 @@ export default function Map() {
     })();
   }, []);
 
+  const handleRideData = () => {
+    const time = timerconvert();
+    dispatch(setInvoice({ ...invoice, distance: distance.toFixed(2), time }));
+    navigation.navigate("Camera");
+  };
+
+  const timerconvert = () => {
+    const totalTime = minutes * 60 + seconds;
+    return totalTime;
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -162,18 +179,24 @@ export default function Map() {
       </MapView>
       <View style={styles.card}>
         <View style={styles.wrap_info}>
-          <Text style={styles.info}>
-            Timer: {minutes}:{seconds < 10 ? "0" + seconds : seconds}
-          </Text>
-          <Text style={styles.info}>Distane:{distance.toFixed(2)} km</Text>
+          <View style={styles.info}>
+            <Text style={{ fontSize: 35 }}>
+              {minutes}:{seconds < 10 ? "0" + seconds : seconds}
+            </Text>
+            <Text style={{ fontWeight: "800", fontSize: 15 }}>Timer</Text>
+          </View>
+          <View style={styles.info}>
+            <Text style={{ fontSize: 35 }}>{distance.toFixed(2)} km</Text>
+            <Text style={{ fontWeight: "800", fontSize: 15 }}>Distane:</Text>
+          </View>
         </View>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("BikeInfo");
+            handleRideData();
           }}
-          style={styles.stop}
+          style={styles.button}
         >
-          <Text styles={{ fontWeight: "bold" }}>Finish the Ride</Text>
+          <Text styles={styles.button_text}>Finish the Ride</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -189,15 +212,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: "#006d77",
+    backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: "16%",
+    height: "20%",
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: "5%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   wrap_info: {
     display: "flex",
@@ -210,18 +242,25 @@ const styles = StyleSheet.create({
   info: {
     color: "white",
     fontSize: 20,
-    justifyContent: "flex-start",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  stop: {
-    backgroundColor: "red",
+  button: {
     flex: 1,
-    height: "30%",
+    height: "26%",
     width: "80%",
-    backgroundColor: "white",
+    backgroundColor: "#52b788",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "5%",
-    borderRadius: 6,
+    borderRadius: 4,
+    marginBottom: "3%",
+  },
+  button_text: {
+    fontSize: 2,
+    fontWeight: "800",
+    color: "white",
   },
 });
