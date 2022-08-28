@@ -4,6 +4,7 @@ import { Rating, AirbnbRating } from "react-native-ratings";
 import { useDispatch, useSelector } from "react-redux";
 import { setInvoice } from "../slices/navSlice";
 import { selectInvoice, selectToken } from "../slices/navSlice";
+import { useNavigation } from "@react-navigation/native";
 
 export default function BikeInfoScreen({ route, navigation }) {
   const { photo } = route.params;
@@ -11,6 +12,7 @@ export default function BikeInfoScreen({ route, navigation }) {
   const dispatch = useDispatch();
   const invoice = useSelector(selectInvoice);
   const jwt = useSelector(selectToken);
+  const navigate = useNavigation();
 
   function ratingCompleted(rating) {
     console.log("Rating is: " + rating);
@@ -44,6 +46,8 @@ export default function BikeInfoScreen({ route, navigation }) {
         rate: rate,
       })
     );
+
+    navigate.navigate("FeedBack");
   };
 
   return (

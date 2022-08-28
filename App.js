@@ -9,6 +9,7 @@ import ScannerScreen from "./screens/ScannerScreen";
 import CameraScreen from "./screens/CameraScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import BikeInfoScreen from "./screens/BikeInfoScreen";
+import FeedScreen from "./screens/FeedScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
             <Stack.Screen name="Scanner" component={ScannerScreen} />
             <Stack.Screen name="Camera" component={CameraScreen} />
             <Stack.Screen name="BikeInfo" component={BikeInfoScreen} />
+            <Stack.Screen name="FeedBack" component={FeedScreen} />
           </Stack.Navigator>
         </TailwindProvider>
       </NavigationContainer>

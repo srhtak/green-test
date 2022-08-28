@@ -117,7 +117,9 @@ export default function Map() {
 
   const handleRideData = () => {
     const time = timerconvert();
-    dispatch(setInvoice({ ...invoice, distance: distance.toFixed(2), time }));
+    dispatch(
+      setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
+    );
     navigation.navigate("Camera");
   };
 
@@ -179,15 +181,22 @@ export default function Map() {
       </MapView>
       <View style={styles.card}>
         <View style={styles.wrap_info}>
-          <View style={styles.info}>
+          <View style={styles.info_left}>
             <Text style={{ fontSize: 35 }}>
               {minutes}:{seconds < 10 ? "0" + seconds : seconds}
             </Text>
-            <Text style={{ fontWeight: "800", fontSize: 15 }}>Timer</Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 12,
+              }}
+            >
+              Timer
+            </Text>
           </View>
-          <View style={styles.info}>
+          <View style={styles.info_right}>
             <Text style={{ fontSize: 35 }}>{distance.toFixed(2)} km</Text>
-            <Text style={{ fontWeight: "800", fontSize: 15 }}>Distane:</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 12 }}>Distane</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -234,18 +243,30 @@ const styles = StyleSheet.create({
   wrap_info: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
     alignItems: "center",
+    justifyContent: "space-evenly",
     height: "60%",
     width: "100%",
   },
-  info: {
+  info_left: {
     color: "white",
     fontSize: 20,
     display: "flex",
+    position: "absolute",
+    left: "12%",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
+  },
+  info_right: {
+    color: "white",
+    fontSize: 20,
+    display: "flex",
+    position: "absolute",
+    right: "12%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
   button: {
     flex: 1,

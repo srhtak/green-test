@@ -34,6 +34,7 @@ export default function HomeScreen() {
         .post(`${API_URL}/Account/Login`, values)
         .then((res) => {
           if (res.status === 200) {
+            console.log(res);
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
             navigation.navigate("Home");
           }
