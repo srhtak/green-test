@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -13,6 +14,7 @@ import {
   selectOrigin,
   selectInvoice,
   setInvoice,
+  selectToken,
 } from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
@@ -20,7 +22,10 @@ import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import cloneDeep from "lodash.clonedeep";
 import haversine from "haversine";
+import { API_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import axios from "axios";
 export default function Map() {
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
@@ -31,9 +36,87 @@ export default function Map() {
   const [distance, setDistance] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const [rearLight, setRearLight] = useState(false);
+  const [frontLight, setFrontLight] = useState(false);
+  const [isRearLoading, setRearLoading] = useState(false);
+  const [isFrontLoading, setFrontLoading] = useState(false);
+  const jwt = useSelector(selectToken);
   const invoice = useSelector(selectInvoice);
   const markerRef = useRef(null);
   const dispatch = useDispatch();
+
+  const toggleRearLight = async () => {
+    await axios
+      .get(
+        `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
+        config
+      )
+      .then((res) => {
+        if (res.data.resultTypeId === 200) {
+          console.log(res.data);
+          setRearLight(!rearLight);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setRearLight(false);
+      });
+  };
+
+  const fronApiCall = async () => {
+    setFrontLoading(true);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+    if (!frontLight) {
+      await axios
+        .get(
+          `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=true`,
+          config
+        )
+        .then((res) => {
+          console.log("true then");
+          setFrontLoading(false);
+          setFrontLight(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("true error");
+          setFrontLoading(false);
+          setFrontLight(false);
+        });
+    } else {
+      await axios
+        .get(
+          `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
+          config
+        )
+        .then((res) => {
+          console.log("false then");
+          console.log(res.data);
+          setRearLight(false);
+          setFrontLoading(false);
+        })
+        .catch((error) => {
+          console.log("false error");
+          console.log(error);
+          setFrontLoading(false);
+          setRearLight(false);
+        });
+    }
+  };
+
+  const toggleFrontLight = async () => {
+    try {
+      await fronApiCall();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     mapRef.current.animateToRegion({
@@ -180,6 +263,47 @@ export default function Map() {
         />
       </MapView>
       <View style={styles.card}>
+        <View style={styles.lights_wrap}>
+          <Text style={{ fontWeight: "bold", fontSize: 24, color: "#FFC107" }}>
+            Headlights
+          </Text>
+          <View style={styles.lights}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ marginRight: 10 }}>Rear</Text>
+              <MaterialCommunityIcons
+                color={rearLight ? "#FFC107" : "black"}
+                size={32}
+                name={"car-light-high"}
+              />
+              <Switch onValueChange={toggleRearLight} value={rearLight} />
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ marginRight: 10 }}>Front</Text>
+              <MaterialCommunityIcons
+                color={frontLight ? "#FFC107" : "black"}
+                size={32}
+                name={"car-light-high"}
+              />
+              <Switch
+                disabled={isFrontLoading}
+                onValueChange={toggleFrontLight}
+                value={frontLight}
+              />
+            </View>
+          </View>
+        </View>
         <View style={styles.wrap_info}>
           <View style={styles.info_left}>
             <Text style={{ fontSize: 35 }}>
@@ -224,7 +348,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: "20%",
+    height: "30%",
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
@@ -245,7 +369,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    height: "60%",
+    height: "30%",
     width: "100%",
   },
   info_left: {
@@ -269,19 +393,32 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   button: {
-    flex: 1,
-    height: "26%",
+    height: "20%",
     width: "80%",
     backgroundColor: "#52b788",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
-    marginBottom: "3%",
+    marginBottom: "1%",
   },
   button_text: {
     fontSize: 2,
     fontWeight: "800",
     color: "white",
+  },
+  lights_wrap: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  lights: {
+    display: "flex",
+    flexDirection: "column",
+    width: "40%",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

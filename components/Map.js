@@ -72,6 +72,7 @@ export default function Map() {
       );
     })();
   }, []);
+
   return (
     <View style={styles.container}>
       <MapView

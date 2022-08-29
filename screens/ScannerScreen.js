@@ -27,18 +27,29 @@ export default function Scanner() {
         Authorization: "Bearer " + jwt.token,
       },
     };
-    const BikeId = "12345";
+
     await axios
-      .get(`${API_URL}/Bike/UnLock?BikeId=${BikeId}`, config)
+      .get(`${API_URL}/Bike/GetInfo?BikeId=${data}`, config)
       .then((res) => {
-        if (res.data.resultTypeId === 200) {
-          console.log("sur amk");
-          console.log(res.data);
-        }
+        console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
+
+    // await axios
+    //   .get(
+    //     `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
+    //     config
+    //   )
+    //   .then((res) => {
+    //     if (res.data.resultTypeId === 200) {
+    //       console.log(res.data);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   if (hasPermission === null) {

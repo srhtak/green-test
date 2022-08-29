@@ -14,9 +14,15 @@ export default function FeedScreen() {
       <Animatable.Text animation="zoomInUp" style={styles.title}>
         Payment Successful
       </Animatable.Text>
-      <Text style={styles.text}>Your payment has been processed!</Text>
-      <Text style={styles.text}>Details of transaction are included below</Text>
-      <Text style={styles.transaction}>Transaction Number : 123456789</Text>
+      <Animatable.Text animation="fadeInDown" style={styles.text}>
+        Your payment has been processed!
+      </Animatable.Text>
+      <Animatable.Text animation="fadeInDown" style={styles.text}>
+        Details of transaction are included below
+      </Animatable.Text>
+      <Animatable.Text animation="fadeInUp" style={styles.transaction}>
+        Transaction Number : 123456789
+      </Animatable.Text>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
         <Text>TOTAL AMOUNT PAID</Text>
         <Text>32.25 TL</Text>
