@@ -16,7 +16,7 @@ const getBike = async (bikeId) => {
   };
 
   useEffect(() => {
-    (async () => {
+    const intervalId = setInterval(async () => {
       await axios
         .get(`${API_URL}/Bike/GetInfo?BikeId=${bikeId}`, config)
         .then((res) => {
@@ -26,8 +26,10 @@ const getBike = async (bikeId) => {
         .catch((error) => {
           console.log(error);
         });
-    })();
-  }, []);
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [bikeId]);
 
   return bike;
 };
