@@ -26,7 +26,9 @@ import { API_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
+import getBike from "../hooks/useBike";
 export default function Map() {
+  const { bike } = getBike("F1HNRF");
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
@@ -166,6 +168,12 @@ export default function Map() {
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
+      }
+
+      if (!bike) {
+        console.log("bisiklete baglanamadi");
+      } else {
+        console.log("bisiklete baglandi", bike);
       }
 
       let location = await Location.getCurrentPositionAsync({});
