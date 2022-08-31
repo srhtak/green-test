@@ -8,8 +8,10 @@ import {
   TextInput,
   StyleSheet,
   ActivityIndicator,
+  Toast,
 } from "react-native";
 import { Formik } from "formik";
+import { setInvoice } from "../slices/navSlice";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { API_URL } from "@env";
@@ -34,11 +36,10 @@ export default function HomeScreen() {
         .post(`${API_URL}/Account/Login`, values)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
             navigation.navigate("Home");
+            setIsLoading(false);
           }
-          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err.data);
@@ -61,11 +62,7 @@ export default function HomeScreen() {
             .min(4, "Username should be at least 4 chars")
             .max(10, "Username should not excced 10 chars")
             .required("Username is required"),
-          password: yup
-            .string()
-            .required("Password is required")
-            .min(4)
-            .max(10, "password should not excced 10 chars"),
+          password: yup.string().required("Password is required").min(4),
         })}
       >
         {({
@@ -111,7 +108,6 @@ export default function HomeScreen() {
               <ActivityIndicator size="large" color="#0000ff" />
             ) : (
               <TouchableOpacity
-                disabled={!isValid}
                 onPress={() => handleSubmit()}
                 style={styles.submitButton}
               >

@@ -15,21 +15,15 @@ const getBike = async (bikeId) => {
     },
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      await axios
-        .get(`${API_URL}/Bike/GetInfo?BikeId=${bikeId}`, config)
-        .then((res) => {
-          console.log(res.data);
-          setBike(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  await axios
+    .get(`${API_URL}/Bike/GetInfo?BikeId=${bikeId}`, config)
+    .then((res) => {
+      console.log(res.data);
+      setBike(res.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   return bike;
 };

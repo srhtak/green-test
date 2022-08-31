@@ -52,6 +52,7 @@ export const {
   setTravelTimeInformation,
   setAuthToken,
   setInvoice,
+  setIsTracking,
 } = navSlice.actions;
 
 export const selectOrigin = (state) => state.nav.origin;

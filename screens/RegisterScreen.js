@@ -36,11 +36,13 @@ export default function HomeScreen() {
         if (res.status === 200) {
           dispatch(setAuthToken({ token: `${res.data.value.token}` }));
           navigation.navigate("Home");
+          console.log(values);
+          console.log(res.data);
           setIsLoading(false);
         }
       })
       .catch((err) => {
-        console.log(err.data);
+        console.log(err);
         setIsLoading(false);
       });
   };

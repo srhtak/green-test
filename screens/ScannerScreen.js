@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { API_URL } from "@env";
-import { useSelector } from "react-redux";
-import { selectToken } from "../slices/navSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { selectToken, setIsTracking } from "../slices/navSlice";
 import axios from "axios";
 
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const navigation = useNavigation();
   const jwt = useSelector(selectToken);
 
   useEffect(() => {
@@ -29,27 +31,17 @@ export default function Scanner() {
     };
 
     await axios
-      .get(`${API_URL}/Bike/GetInfo?BikeId=${data}`, config)
+      .get(`${API_URL}/Bike/UnLock?BikeId=${data}`, config)
       .then((res) => {
-        console.log(res.data);
+        if (res.status === 200) {
+          console.log(res.data);
+          dispatch(setIsTracking({ isTracking: true }));
+          navigation.navigate("Home");
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-
-    // await axios
-    //   .get(
-    //     `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
-    //     config
-    //   )
-    //   .then((res) => {
-    //     if (res.data.resultTypeId === 200) {
-    //       console.log(res.data);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   };
 
   if (hasPermission === null) {
