@@ -30,6 +30,7 @@ export default function Scanner() {
 
   const handleBarCodeScanned = async ({ type, data }) => {
     dispatch(setIsTracking(true));
+    dispatch();
     navigation.navigate("Home");
     setLoading(true);
     console.log(data);
@@ -46,7 +47,6 @@ export default function Scanner() {
       .then((res) => {
         if (res.data.resultTypeId === 200) {
           setLoading(false);
-          console.log("here 200");
           console.log(res.data);
           dispatch(setIsTracking({ isTracking: true }));
           navigation.navigate("Home");
