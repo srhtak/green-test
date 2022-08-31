@@ -65,7 +65,7 @@ export default function Map() {
       });
   };
 
-  const fronApiCall = async () => {
+  const frontApiCall = async () => {
     setFrontLoading(true);
     const config = {
       headers: {
@@ -75,13 +75,13 @@ export default function Map() {
       },
     };
     if (!frontLight) {
+      console.log("turn on");
       await axios
         .get(
           `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=true`,
           config
         )
         .then((res) => {
-          console.log("true then");
           setFrontLoading(false);
           setFrontLight(true);
         })
@@ -89,32 +89,29 @@ export default function Map() {
           console.log(error);
           console.log("true error");
           setFrontLoading(false);
-          setFrontLight(false);
         });
     } else {
+      console.log("turn off");
       await axios
         .get(
           `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
           config
         )
         .then((res) => {
-          console.log("false then");
           console.log(res.data);
-          setRearLight(false);
+          setFrontLight(false);
           setFrontLoading(false);
         })
         .catch((error) => {
-          console.log("false error");
           console.log(error);
           setFrontLoading(false);
-          setRearLight(false);
         });
     }
   };
 
   const toggleFrontLight = async () => {
     try {
-      await fronApiCall();
+      await frontApiCall();
     } catch (error) {
       console.log(error);
     }

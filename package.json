@@ -40,12 +40,10 @@
     "react-native-web": "0.17.7",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
-    "tailwindcss-react-native": "^1.7.10",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "tailwindcss": "^3.1.7"
+    "@babel/core": "^7.12.9"
   },
   "private": true
 }
