@@ -8,14 +8,13 @@ import {
   TextInput,
   StyleSheet,
   ActivityIndicator,
-  Toast,
 } from "react-native";
 import { Formik } from "formik";
-import { setInvoice } from "../slices/navSlice";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { API_URL } from "@env";
 import axios from "axios";
+import Toast from "react-native-root-toast";
 import { setAuthToken } from "../slices/navSlice";
 
 export default function HomeScreen() {
@@ -34,15 +33,24 @@ export default function HomeScreen() {
       setIsLoading(true);
       await axios
         .post(`${API_URL}/Account/Login`, values)
-        .then((res) => {
-          if (res.status === 200) {
+        .then(async (res) => {
+          if (res.data.resultTypeId === 200) {
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
             navigation.navigate("Home");
             setIsLoading(false);
+          } else if (res.data.resultTypeId === 400) {
+            Toast.show("Kullanıcı adı veya şifre yanlış", {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.BOTTOM,
+              backgroundColor: "red",
+              textColor: "white",
+            });
+            setIsLoading(false);
+            console.log(res.data);
           }
         })
         .catch((err) => {
-          console.log(err.data);
+          console.log(err);
           setIsLoading(false);
         });
     } catch (err) {

@@ -18,7 +18,7 @@ const initialState = {
   destination: null,
   travelTimeInformation: null,
   token: null,
-  isLiveTracking: true,
+  isLiveTracking: false,
 };
 
 export const navSlice = createSlice({

@@ -10,21 +10,27 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
+import { API_URL } from "@env";
 import {
   setOrigin,
   selectOrigin,
   selectDestination,
   setDestination,
   selectToken,
+  setInvoice,
+  selectInvoice,
 } from "../slices/navSlice";
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
+import axios from "axios";
+import { invoke } from "lodash";
 export default function Map() {
   const navigation = useNavigation();
-  const Locations = new Array(30).fill(1).map((_, i) => `Bicycle ${i + 1}`);
+  const Locations = new Array(3).fill(1).map((_, i) => `Bicycle ${i + 1}`);
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
@@ -34,6 +40,9 @@ export default function Map() {
   const dispatch = useDispatch();
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [user, setUser] = useState(null);
+  const jwt = useSelector(selectToken);
+  const invoice = useSelector(selectInvoice);
   const [isBikeClicked, setBikeClicked] = useState(false);
   useEffect(() => {
     mapRef.current.animateToRegion({
@@ -52,6 +61,40 @@ export default function Map() {
       longitudeDelta: ASPECT_RATIO * 0.007,
     });
   };
+
+  const fetchUser = useCallback(async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+
+    await axios
+      .get(`${API_URL}/UserClient/GetUser`, config)
+      .then((res) => {
+        if (res.data.resultTypeId === 200) {
+          dispatch(
+            setInvoice({
+              ...invoice,
+              userClientId: res.data.value.id,
+            })
+          );
+        }
+
+        setUser(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchUser().catch((error) => {
+      console.log(error);
+    });
+  }, [fetchUser]);
 
   useEffect(() => {
     (async () => {

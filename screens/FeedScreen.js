@@ -25,7 +25,7 @@ export default function FeedScreen() {
       </Animatable.Text>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
         <Text>TOTAL AMOUNT PAID</Text>
-        <Text>32.25 TL</Text>
+        <Text>150.25 TL</Text>
       </Animatable.View>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
         <Text>PAYED BY</Text>

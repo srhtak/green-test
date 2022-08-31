@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+} from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { API_URL } from "@env";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +16,9 @@ import axios from "axios";
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const jwt = useSelector(selectToken);
 
   useEffect(() => {
@@ -21,7 +29,10 @@ export default function Scanner() {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
+    dispatch(setIsTracking(true));
+    navigation.navigate("Home");
+    setLoading(true);
+    console.log(data);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -33,13 +44,20 @@ export default function Scanner() {
     await axios
       .get(`${API_URL}/Bike/UnLock?BikeId=${data}`, config)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.resultTypeId === 200) {
+          setLoading(false);
+          console.log("here 200");
           console.log(res.data);
           dispatch(setIsTracking({ isTracking: true }));
           navigation.navigate("Home");
+        } else {
+          setLoading(false);
+          console.log(res.data.messageCode);
         }
       })
       .catch((error) => {
+        console.log("here error");
+        setLoading(false);
         console.log(error);
       });
   };
@@ -54,9 +72,11 @@ export default function Scanner() {
   return (
     <View style={styles.container}>
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        onBarCodeScanned={loading ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
+      <View style={styles.scanner}></View>
+      {loading && <ActivityIndicator size="large" color="#00ff00" />}
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
@@ -69,5 +89,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+  },
+  scanner: {
+    position: "absolute",
+    left: "10%",
+    backgroundColor: "transparent",
+    width: "80%",
+    height: "40%",
+    borderWidth: 2,
+    borderColor: "green",
   },
 });
