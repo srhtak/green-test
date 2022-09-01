@@ -53,13 +53,17 @@ export default function Map() {
     });
   }, [origin]);
 
-  const selectLocation = (region) => {
-    mapRef.current.animateToRegion({
-      latitude: region.lat,
-      longitude: region.lng,
-      latitudeDelta: 0.007,
-      longitudeDelta: ASPECT_RATIO * 0.007,
-    });
+  const selectLocation = async (region) => {
+    try {
+      await mapRef.current.animateToRegion({
+        latitude: region.lat,
+        longitude: region.lng,
+        latitudeDelta: 0.007,
+        longitudeDelta: ASPECT_RATIO * 0.007,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const fetchUser = useCallback(async () => {
@@ -172,14 +176,14 @@ export default function Map() {
               longitudeDelta: ASPECT_RATIO * 0.007,
               draggable: true,
             }}
-            onPress={(e) => {
+            onPress={async (e) => {
               dispatch(
                 setDestination({
                   lat: e.nativeEvent.coordinate.latitude,
                   lng: e.nativeEvent.coordinate.longitude,
                 })
               );
-              selectLocation(destination);
+              await selectLocation(destination);
               setBikeClicked(true);
             }}
             key={i}
