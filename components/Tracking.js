@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Switch,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import {
   setOrigin,
@@ -43,25 +43,34 @@ export default function Map() {
   const jwt = useSelector(selectToken);
   const invoice = useSelector(selectInvoice);
   const markerRef = useRef(null);
+  const [bikeInfo, setBikeInfo] = useState(invoice);
   const dispatch = useDispatch();
 
-  const toggleRearLight = async () => {
+  const fetchBike = useCallback(async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+
     await axios
-      .get(
-        `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=0&turnType=false`,
-        config
-      )
+      .get(`${API_URL}/Bike/GetInfo?BikeId=${invoice.bikeId}`, config)
       .then((res) => {
-        if (res.data.resultTypeId === 200) {
-          console.log(res.data);
-          setRearLight(!rearLight);
-        }
+        setFrontLight(res.data.value.lights.front);
+        setRearLight(res.data.value.lights.rear);
       })
       .catch((error) => {
         console.log(error);
-        setRearLight(false);
       });
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchBike().catch((error) => {
+      console.log(error);
+    });
+  }, [fetchBike]);
 
   const frontApiCall = async () => {
     setFrontLoading(true);
@@ -110,6 +119,58 @@ export default function Map() {
   const toggleFrontLight = async () => {
     try {
       await frontApiCall();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const rearApiCall = async () => {
+    setRearLoading(true);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+    if (!rearLight) {
+      console.log("turn on");
+      await axios
+        .get(
+          `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=1&turnType=true`,
+          config
+        )
+        .then((res) => {
+          setRearLoading(false);
+          setRearLight(true);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("true error");
+          setRearLoading(false);
+        });
+    } else {
+      console.log("turn off");
+      await axios
+        .get(
+          `${API_URL}/Bike/TurnLights?BikeId=F1HNRF&lightNumber=1&turnType=false`,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+          setRearLight(false);
+          setRearLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setRearLoading(false);
+        });
+    }
+  };
+
+  const toggleRearLight = async () => {
+    try {
+      await rearApiCall();
     } catch (error) {
       console.log(error);
     }

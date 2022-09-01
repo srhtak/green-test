@@ -10,7 +10,12 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { API_URL } from "@env";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { selectToken, setIsTracking } from "../slices/navSlice";
+import {
+  selectInvoice,
+  selectToken,
+  setIsTracking,
+  setInvoice,
+} from "../slices/navSlice";
 import axios from "axios";
 
 export default function Scanner() {
@@ -19,6 +24,7 @@ export default function Scanner() {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const invoice = useSelector(selectInvoice);
   const jwt = useSelector(selectToken);
 
   useEffect(() => {
@@ -30,7 +36,7 @@ export default function Scanner() {
 
   const handleBarCodeScanned = async ({ type, data }) => {
     dispatch(setIsTracking(true));
-    dispatch();
+    dispatch(setInvoice({ ...invoice, bikeId: data }));
     navigation.navigate("Home");
     setLoading(true);
     console.log(data);
