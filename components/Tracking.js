@@ -58,8 +58,42 @@ export default function Map() {
     await axios
       .get(`${API_URL}/Bike/GetInfo?BikeId=${invoice.bikeId}`, config)
       .then((res) => {
-        setFrontLight(res.data.value.lights.front);
-        setRearLight(res.data.value.lights.rear);
+        if (
+          res.data.value === null ||
+          res.data.value === undefined ||
+          res.data.value.lights.front === undefined ||
+          res.data.value.lights.front === null
+        )
+          console.log(
+            'The API response did not include the front state. Light state will assuming to be "false"'
+          );
+
+        if (
+          res.data.value === null ||
+          res.data.value === undefined ||
+          res.data.value.lights.rear === undefined ||
+          res.data.value.lights.rear === null
+        )
+          console.log(
+            'The API response did not include the backlight state. Light state will assuming to be "false"'
+          );
+
+        setFrontLight(
+          res.data.value === null ||
+            res.data.value === undefined ||
+            res.data.value.lights.front === undefined ||
+            res.data.value.lights.front === null
+            ? false
+            : res.data.value.lights.front
+        );
+        setRearLight(
+          res.data.value === null ||
+            res.data.value === undefined ||
+            res.data.value.lights.rear === undefined ||
+            res.data.value.lights.rear === null
+            ? false
+            : res.data.value.lights.rear
+        );
       })
       .catch((error) => {
         console.log(error);
