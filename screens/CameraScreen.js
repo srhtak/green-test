@@ -23,14 +23,14 @@ export default function CameraScreen() {
       console.log("Taking photo");
       const options = {
         quality: 1,
-        base64: true,
+        base64: false,
         fixOrientation: true,
         exif: true,
       };
       await cameraRef.current.takePictureAsync(options).then((photo) => {
         photo.exif.Orientation = 1;
         navigation.navigate("BikeInfo", { photo: photo });
-        console.debug(photo);
+        console.log(photo);
       });
     }
   }

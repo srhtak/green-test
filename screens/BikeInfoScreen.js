@@ -15,7 +15,6 @@ export default function BikeInfoScreen({ route, navigation }) {
   const navigate = useNavigation();
 
   function ratingCompleted(rating) {
-    console.log("Rating is: " + rating);
     setRate(rating);
   }
 
