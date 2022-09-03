@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Button,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +17,7 @@ import {
   setInvoice,
 } from "../slices/navSlice";
 import axios from "axios";
+import * as Animatable from "react-native-animatable";
 
 export default function Scanner() {
   const API_URL = process.env.API_URL;
@@ -26,6 +28,15 @@ export default function Scanner() {
   const dispatch = useDispatch();
   const invoice = useSelector(selectInvoice);
   const jwt = useSelector(selectToken);
+
+  const zoomIn = {
+    from: {
+      scale: 0.9,
+    },
+    to: {
+      scale: 1,
+    },
+  };
 
   useEffect(() => {
     (async () => {
@@ -81,7 +92,13 @@ export default function Scanner() {
         onBarCodeScanned={loading ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      <View style={styles.scanner}></View>
+      <Animatable.Image
+        animation={zoomIn}
+        iterationCount={Infinity}
+        direction="alternate"
+        source={require("../assets/scanner.png")}
+        style={styles.scanner}
+      />
       {loading && <ActivityIndicator size="large" color="#00ff00" />}
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
@@ -98,11 +115,8 @@ const styles = StyleSheet.create({
   },
   scanner: {
     position: "absolute",
-    left: "10%",
     backgroundColor: "transparent",
-    width: "80%",
-    height: "40%",
-    borderWidth: 2,
-    borderColor: "green",
+    width: "100%",
+    height: "70%",
   },
 });
