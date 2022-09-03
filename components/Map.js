@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
-import { API_URL } from "@env";
 import {
   setOrigin,
   selectOrigin,
@@ -23,12 +22,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
-import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback } from "react";
 import axios from "axios";
 import { invoke } from "lodash";
 export default function Map() {
+  const API_URL = process.env.API_URL;
+  const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_MAPS_APIKEY;
   const navigation = useNavigation();
   const Locations = new Array(3).fill(1).map((_, i) => `Bicycle ${i + 1}`);
   const { width, height } = Dimensions.get("window");

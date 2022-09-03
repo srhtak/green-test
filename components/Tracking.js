@@ -19,14 +19,13 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
-import { GOOGLE_MAPS_APIKEY } from "@env";
 import cloneDeep from "lodash.clonedeep";
 import haversine from "haversine";
-import { API_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 export default function Map() {
+  const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_MAPS_APIKEY;
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const origin = useSelector(selectOrigin);
@@ -45,6 +44,7 @@ export default function Map() {
   const markerRef = useRef(null);
   const [bikeInfo, setBikeInfo] = useState(invoice);
   const dispatch = useDispatch();
+  const API_URL = process.env.API_URL;
 
   const fetchBike = useCallback(async () => {
     const config = {

@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { API_URL } from "@env";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -19,6 +18,7 @@ import {
 import axios from "axios";
 
 export default function Scanner() {
+  const API_URL = process.env.API_URL;
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [loading, setLoading] = useState(false);

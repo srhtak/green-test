@@ -9,13 +9,13 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { API_URL } from "@env";
 import { Formik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
 export default function HomeScreen() {
+  const API_URL = process.env.API_URL;
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);

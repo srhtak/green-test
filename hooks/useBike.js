@@ -2,9 +2,9 @@ import { selectToken } from "../slices/navSlice";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "@env";
 
 const getBike = async (bikeId) => {
+  const API_URL = process.env.API_URL;
   const [bike, setBike] = useState(null);
   const jwt = useSelector(selectToken);
   const config = {

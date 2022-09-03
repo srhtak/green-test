@@ -19,26 +19,6 @@ export default function BikeInfoScreen({ route, navigation }) {
   }
 
   const handleReview = async () => {
-    //   const config = {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //       Authorization: "Bearer " + jwt.token,
-    //     },
-    //   };
-    //   const invoiceId = "1";
-    //   await axios
-    //     .post(`${API_URL}/Invoice/AddImage`, config, photo)
-    //     .then((res) => {
-    //       if (res.data.resultTypeId === 200) {
-    //         console.log("success")
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // };
-
     dispatch(
       setInvoice({
         ...invoice,

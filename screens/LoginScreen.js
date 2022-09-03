@@ -29,10 +29,11 @@ export default function HomeScreen() {
   }, []);
 
   const onSubmit = async (values) => {
+    console.log(values);
     try {
       setIsLoading(true);
       await axios
-        .post(`${API_URL}/Account/Login`, values)
+        .post(`${process.env.API_URL}/Account/Login`, values)
         .then(async (res) => {
           if (res.data.resultTypeId === 200) {
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
