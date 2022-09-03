@@ -18,6 +18,7 @@ import Toast from "react-native-root-toast";
 import { setAuthToken } from "../slices/navSlice";
 
 export default function HomeScreen() {
+  const API_URL = process.env.API_URL;
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +34,7 @@ export default function HomeScreen() {
     try {
       setIsLoading(true);
       await axios
-        .post(`${process.env.API_URL}/Account/Login`, values)
+        .post(`${API_URL}/Account/Login`, values)
         .then(async (res) => {
           if (res.data.resultTypeId === 200) {
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
