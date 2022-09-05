@@ -24,6 +24,7 @@ import haversine from "haversine";
 import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
+import Toast from "react-native-root-toast";
 export default function Map() {
   const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_MAPS_APIKEY;
   const { width, height } = Dimensions.get("window");
@@ -290,12 +291,34 @@ export default function Map() {
     })();
   }, []);
 
-  const handleRideData = () => {
-    const time = timerconvert();
-    dispatch(
-      setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
-    );
-    navigation.navigate("Camera");
+  const handleRideData = async () => {
+    // const time = timerconvert();
+    // dispatch(
+    //   setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
+    // );
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + jwt.token,
+      },
+    };
+
+    await axios
+      .get(`${API_URL}/Bike/GetInfo?BikeId=${invoice.bikeId}`, config)
+      .then((res) => {
+        if (!res.data.value.locked) {
+          Toast.show("Lütfen bisikleti kilitleyin", {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            backgroundColor: "red",
+            textColor: "white",
+          });
+        } else {
+          navigation.navigate("Camera");
+        }
+      });
   };
 
   const timerconvert = () => {
