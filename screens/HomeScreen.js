@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
@@ -21,6 +21,7 @@ import {
 } from "../slices/navSlice";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import { Keyboard } from "react-native";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -29,6 +30,10 @@ export default function HomeScreen() {
     navigation.setOptions({
       headerShown: false,
     });
+  }, []);
+
+  useEffect(() => {
+    Keyboard.dismiss();
   }, []);
 
   return (

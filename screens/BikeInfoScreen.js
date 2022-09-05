@@ -43,7 +43,6 @@ export default function BikeInfoScreen({ route, navigation }) {
         selectedColor="#52b788"
         reviewColor="#52b788"
         reviewSize={40}
-        size={30}
       />
       <TouchableOpacity onPress={handleReview} style={styles.button}>
         <Text styles={styles.button_text}>Submit</Text>

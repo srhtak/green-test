@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -38,8 +38,13 @@ export default function HomeScreen() {
         .then(async (res) => {
           if (res.data.resultTypeId === 200) {
             dispatch(setAuthToken({ token: `${res.data.value.token}` }));
-            navigation.navigate("Home");
             setIsLoading(false);
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{ name: "Home" }],
+              })
+            );
           } else if (res.data.resultTypeId === 400) {
             Toast.show("Kullanıcı adı veya şifre yanlış", {
               duration: Toast.durations.LONG,

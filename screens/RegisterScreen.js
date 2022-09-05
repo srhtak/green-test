@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -35,7 +35,12 @@ export default function HomeScreen() {
       .then((res) => {
         if (res.status === 200) {
           dispatch(setAuthToken({ token: `${res.data.value.token}` }));
-          navigation.navigate("Home");
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "Home" }],
+            })
+          );
           console.log(values);
           console.log(res.data);
           setIsLoading(false);

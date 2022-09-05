@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import {
   selectInvoice,
   selectToken,
@@ -48,7 +48,12 @@ export default function Scanner() {
   const handleBarCodeScanned = async ({ type, data }) => {
     dispatch(setIsTracking(true));
     dispatch(setInvoice({ ...invoice, bikeId: data }));
-    navigation.navigate("Home");
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{ name: "Home" }],
+      })
+    );
     setLoading(true);
     console.log(data);
     const config = {
@@ -66,7 +71,12 @@ export default function Scanner() {
           setLoading(false);
           console.log(res.data);
           dispatch(setIsTracking({ isTracking: true }));
-          navigation.navigate("Home");
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "Home" }],
+            })
+          );
         } else {
           setLoading(false);
           console.log(res.data.messageCode);

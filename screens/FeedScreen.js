@@ -1,7 +1,16 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { useLayoutEffect } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import * as Animatable from "react-native-animatable";
+import { useNavigation, StackActions } from "@react-navigation/native";
 
 export default function FeedScreen() {
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Animatable.Image
@@ -24,17 +33,41 @@ export default function FeedScreen() {
         Transaction Number : 123456789
       </Animatable.Text>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
-        <Text>TOTAL AMOUNT PAID</Text>
-        <Text>150.25 TL</Text>
+        <Text style={styles.text}>TOTAL AMOUNT PAID</Text>
+        <Text style={styles.text}>150.25 TL</Text>
       </Animatable.View>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
-        <Text>PAYED BY</Text>
-        <Text>PAYTM</Text>
+        <Text style={styles.text}>PAYED BY</Text>
+        <Text style={styles.text}>PAYTM</Text>
       </Animatable.View>
       <Animatable.View animation="fadeInUp" style={styles.detail}>
-        <Text>TRANSACTION DATE</Text>
-        <Text>28 aug 2022, 20:09</Text>
+        <Text style={styles.text}>TRANSACTION DATE</Text>
+        <Text style={styles.text}>28 aug 2022, 20:09</Text>
       </Animatable.View>
+      <Animatable.View
+        animation="fadeInUp"
+        style={styles.detail}
+      ></Animatable.View>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.dispatch(StackActions.popToTop());
+        }}
+      >
+        <Text
+          style={{
+            borderRadius: 10,
+            borderWidth: 2,
+            borderColor: "#24F384",
+            paddingVertical: 20,
+            paddingHorizontal: 80,
+            fontSize: 18,
+            color: "#24F384",
+          }}
+        >
+          BACK TO HOME
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -42,7 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     display: "flex",
-    backgroundColor: "#fff",
+    backgroundColor: "#00072D",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -52,27 +85,36 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "#57cc99",
+    color: "#24F384",
     marginVertical: 10,
   },
   text: {
-    fontSize: 17,
-    color: "#c0c0c0",
+    color: "#24F384",
   },
   transaction: {
     fontSize: 16,
     color: "#0077b6",
     marginVertical: 10,
   },
+  button: {
+    margin: 20,
+    backgroundColor: "#00072D",
+    display: "flex",
+    paddingVertical: 5,
+    width: "100%",
+
+    alignItems: "center",
+  },
   detail: {
     display: "flex",
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10,
+    marginVertical: 0,
     paddingHorizontal: 20,
+    paddingVertical: 20,
     paddingBottom: 20,
-    borderBottomColor: "#c0c0c0",
-    borderBottomWidth: 1,
+    borderColor: "#24F38440",
+    borderTopWidth: 2,
   },
 });
