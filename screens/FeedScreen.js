@@ -11,12 +11,20 @@ export default function FeedScreen() {
     });
   }, []);
 
+  const slideUp = {
+    from: {
+      translateY: 100,
+    },
+    to: {
+      translateY: 10,
+    },
+  };
+
   return (
     <View style={styles.container}>
       <Animatable.Image
         source={require("../assets/tick.png")}
-        animation="slideInDown"
-        iterationCount={2}
+        animation={slideUp}
         direction="alternate"
         style={styles.tick}
       />
@@ -97,12 +105,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    margin: 20,
     backgroundColor: "#00072D",
     display: "flex",
     paddingVertical: 5,
     width: "100%",
-
     alignItems: "center",
   },
   detail: {
