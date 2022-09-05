@@ -308,7 +308,7 @@ export default function Map() {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        mapType="mutedStandard"
+        mapType="standard"
         showsMyLocationButton={true}
         showsUserLocation={true}
         followsUserLocation

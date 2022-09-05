@@ -124,7 +124,7 @@ export default function Map() {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        mapType="mutedStandard"
+        mapType="standard"
         showsUserLocation={true}
         showsMyLocationButton={true}
         loadingEnabled={true}
