@@ -98,74 +98,70 @@ export default function HomeScreen() {
           isSubmitting,
         }) => (
           <View style={styles.container}>
-            <Text style={styles.title}>Green</Text>
+            <Text style={styles.title}>YEŞİL</Text>
             <TextInput
               autoCapitalize="none"
               placeholder="Name"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("name")}
               onBlur={() => setFieldTouched("name")}
               value={values.name}
             />
             {touched.name && errors.name && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.name}
-              </Text>
+              <Text style={styles.validationError}>{errors.name}</Text>
             )}
             <TextInput
               autoCapitalize="none"
               placeholder="Surname"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("surName")}
               onBlur={() => setFieldTouched("surName")}
               value={values.surName}
             />
             {touched.surName && errors.surName && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.surName}
-              </Text>
+              <Text style={styles.validationError}>{errors.surName}</Text>
             )}
             <TextInput
               autoCapitalize="none"
               placeholder="Username"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("userName")}
               onBlur={() => setFieldTouched("userName")}
               value={values.userName}
             />
             {touched.userName && errors.userName && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.userName}
-              </Text>
+              <Text style={styles.validationError}>{errors.userName}</Text>
             )}
             <TextInput
               autoCapitalize="none"
               placeholder="Email"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("eMail")}
               onBlur={() => setFieldTouched("eMail")}
               value={values.eMail}
             />
             {touched.eMail && errors.eMail && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.eMail}
-              </Text>
+              <Text style={styles.validationError}>{errors.eMail}</Text>
             )}
             <TextInput
               placeholder="Phone number"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("phoneNumber")}
               onBlur={() => setFieldTouched("phoneNumber")}
               value={values.phoneNumber}
             />
             {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.phoneNumber}
-              </Text>
+              <Text style={styles.validationError}>{errors.phoneNumber}</Text>
             )}
             <TextInput
               autoCapitalize="none"
               placeholder="Password"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("password")}
               onBlur={() => setFieldTouched("password")}
@@ -173,9 +169,7 @@ export default function HomeScreen() {
               secureTextEntry={true}
             />
             {touched.password && errors.password && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.password}
-              </Text>
+              <Text style={styles.validationError}>{errors.password}</Text>
             )}
             <TouchableOpacity
               onPress={handleSubmit}
@@ -203,12 +197,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 23,
+    backgroundColor: "#00072D",
     width: "100%",
     height: "100%",
     flexDirection: "column",
   },
   title: {
-    color: "#006d77",
+    color: "#24F384",
     textAlign: "left",
     padding: 20,
     fontWeight: "bold",
@@ -218,13 +213,13 @@ const styles = StyleSheet.create({
     height: 40,
     marginHorizontal: 10,
     marginVertical: 5,
-    borderColor: "#006d77",
+    borderColor: "#24F384",
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
   },
   submitButton: {
-    backgroundColor: "#006d77",
+    backgroundColor: "#24F384",
     padding: 10,
     margin: 15,
     height: 40,
@@ -232,13 +227,14 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
   },
   submitButtonText: {
-    color: "white",
+    color: "#00072D",
     textAlign: "center",
     fontWeight: "bold",
   },
   signinTitle: {
     textAlign: "right",
     paddingRight: 20,
-    color: "#006d77",
+    color: "#24F384",
   },
+  validationError: { fontSize: 12, color: "#FF285C", paddingLeft: 18 },
 });

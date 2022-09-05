@@ -123,6 +123,7 @@ export default function Map() {
   return (
     <View style={styles.container}>
       <MapView
+        customMapStyle={mapStyle_DARK}
         style={styles.map}
         mapType="standard"
         showsUserLocation={true}
@@ -203,18 +204,22 @@ export default function Map() {
               style={styles.bicycle}
               source={require("../assets/en.png")}
             />
-            <Text>%68</Text>
+            <Text style={styles.greenColor}>%68</Text>
           </View>
           <View style={styles.right_info}>
-            <Text>{String(duration).slice(0, 1)} dakika</Text>
-            <Text>{String(distance).slice(2, 5)} metre</Text>
+            <Text style={styles.greenColor}>
+              {String(duration).slice(0, 1)} dakika
+            </Text>
+            <Text style={styles.greenColor}>
+              {String(distance).slice(2, 5)} metre
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("Scanner");
               }}
               style={styles.go}
             >
-              <Text>Sürüşe başla</Text>
+              <Text style={styles.greenColor}>Sürüşe başla</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -234,15 +239,18 @@ const styles = StyleSheet.create({
   snap: {
     position: "absolute",
     alignSelf: "center",
+
     bottom: 30,
-    backgroundColor: "#57cc99",
+    backgroundColor: "#00072D",
     height: 50,
     padding: 10,
     width: "70%",
     height: "15%",
-    borderRadius: 8,
+    borderRadius: 7,
+    borderWidth: 3,
+    borderColor: "#24F384",
     color: "red",
-    shadowColor: "#000",
+    shadowColor: "#fff",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -268,15 +276,257 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     height: "100%",
   },
+  greenColor: {
+    color: "#24F384",
+  },
+  whiteColor: {
+    color: "#fff",
+  },
   go: {
-    backgroundColor: "#0096c7",
+    backgroundColor: "#00072D",
     display: "flex",
     paddingVertical: 5,
     width: "100%",
     borderRadius: 6,
+    borderWidth: 2,
+    borderColor: "#24F384",
     alignItems: "center",
   },
   bicycle: {
     resizeMode: "cover",
   },
 });
+
+const mapStyle_DARK = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#8ec3b9",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1a3646",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#64779e",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.province",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#334e87",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.natural",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#6f9ba5",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3C7680",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#304a7d",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#2c6675",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#255763",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#b0d5ce",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#3a4762",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#0e1626",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#4e6d70",
+      },
+    ],
+  },
+];

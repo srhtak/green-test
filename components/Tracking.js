@@ -307,6 +307,7 @@ export default function Map() {
     <View style={styles.container}>
       <MapView
         provider={PROVIDER_GOOGLE}
+        customMapStyle={mapStyle_DARK}
         style={styles.map}
         mapType="standard"
         showsMyLocationButton={true}
@@ -367,9 +368,16 @@ export default function Map() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ marginRight: 10 }}>Rear</Text>
+              <Text
+                style={{
+                  color: rearLight ? "#FFC107" : "#FFFFFF99",
+                  marginRight: 10,
+                }}
+              >
+                Rear
+              </Text>
               <MaterialCommunityIcons
-                color={rearLight ? "#FFC107" : "black"}
+                color={rearLight ? "#FFC107" : "#FFFFFF99"}
                 size={32}
                 name={"car-light-high"}
               />
@@ -382,9 +390,16 @@ export default function Map() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ marginRight: 10 }}>Front</Text>
+              <Text
+                style={{
+                  color: rearLight ? "#FFC107" : "#FFFFFF99",
+                  marginRight: 10,
+                }}
+              >
+                Front
+              </Text>
               <MaterialCommunityIcons
-                color={frontLight ? "#FFC107" : "black"}
+                color={frontLight ? "#FFC107" : "#FFFFFF99"}
                 size={32}
                 name={"car-light-high"}
               />
@@ -398,11 +413,12 @@ export default function Map() {
         </View>
         <View style={styles.wrap_info}>
           <View style={styles.info_left}>
-            <Text style={{ fontSize: 35 }}>
+            <Text style={{ color: "#24F384", fontSize: 35 }}>
               {minutes}:{seconds < 10 ? "0" + seconds : seconds}
             </Text>
             <Text
               style={{
+                color: "#24F384",
                 fontWeight: "bold",
                 fontSize: 12,
               }}
@@ -411,8 +427,14 @@ export default function Map() {
             </Text>
           </View>
           <View style={styles.info_right}>
-            <Text style={{ fontSize: 35 }}>{distance.toFixed(2)} km</Text>
-            <Text style={{ fontWeight: "bold", fontSize: 12 }}>Distane</Text>
+            <Text style={{ color: "#24F384", fontSize: 35 }}>
+              {distance.toFixed(2)} km
+            </Text>
+            <Text
+              style={{ color: "#24F384", fontWeight: "bold", fontSize: 12 }}
+            >
+              Distane
+            </Text>
           </View>
         </View>
         <TouchableOpacity
@@ -437,16 +459,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: "#00072D",
+    borderTopColor: "#24F384",
+    borderWidth: 3,
     height: "30%",
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: "5%",
-    shadowColor: "#000",
+    shadowColor: "#00072D",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -487,17 +509,17 @@ const styles = StyleSheet.create({
   button: {
     height: "20%",
     width: "80%",
-    backgroundColor: "#52b788",
+    backgroundColor: "#24F384",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 4,
+    borderRadius: 8,
     marginBottom: "1%",
   },
   button_text: {
     fontSize: 2,
     fontWeight: "800",
-    color: "white",
+    color: "#00072D",
   },
   lights_wrap: {
     display: "flex",
@@ -514,3 +536,237 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+const mapStyle_DARK = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#8ec3b9",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1a3646",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#64779e",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.province",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#334e87",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.natural",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#6f9ba5",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3C7680",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#304a7d",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#2c6675",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#255763",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#b0d5ce",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#3a4762",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#0e1626",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#4e6d70",
+      },
+    ],
+  },
+];

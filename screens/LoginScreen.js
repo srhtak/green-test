@@ -86,23 +86,23 @@ export default function HomeScreen() {
           isValid,
         }) => (
           <View style={styles.container}>
-            <Text style={styles.title}>Green</Text>
+            <Text style={styles.title}>YEŞİL</Text>
             <TextInput
               autoCapitalize="none"
               placeholder="Username"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("userName")}
               onBlur={() => setFieldTouched("userName")}
               value={values.userName}
             />
             {touched.userName && errors.userName && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.userName}
-              </Text>
+              <Text style={styles.validationError}>{errors.userName}</Text>
             )}
             <TextInput
               autoCapitalize="none"
               placeholder="Password"
+              placeholderTextColor="#FFFFFF"
               style={styles.input}
               onChangeText={handleChange("password")}
               onBlur={() => setFieldTouched("password")}
@@ -110,12 +110,10 @@ export default function HomeScreen() {
               secureTextEntry={true}
             />
             {touched.password && errors.password && (
-              <Text style={{ fontSize: 12, color: "#FF0D10", paddingLeft: 18 }}>
-                {errors.password}
-              </Text>
+              <Text style={styles.validationError}>{errors.password}</Text>
             )}
             {isLoading ? (
-              <ActivityIndicator size="large" color="#0000ff" />
+              <ActivityIndicator size="large" color="#24F384" />
             ) : (
               <TouchableOpacity
                 onPress={() => handleSubmit()}
@@ -143,29 +141,31 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#00072D",
     paddingTop: 23,
     width: "100%",
     height: "100%",
     flexDirection: "column",
   },
   title: {
-    color: "#006d77",
+    color: "#24F384",
     textAlign: "left",
     padding: 20,
     fontWeight: "bold",
     fontSize: 60,
   },
   input: {
+    color: "#24F384",
     height: 40,
     marginHorizontal: 10,
     marginVertical: 5,
-    borderColor: "#006d77",
+    borderColor: "#24F384",
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
   },
   submitButton: {
-    backgroundColor: "#006d77",
+    backgroundColor: "#24F384",
     padding: 10,
     margin: 15,
     height: 40,
@@ -173,13 +173,14 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
   },
   submitButtonText: {
-    color: "white",
+    color: "#00072D",
     textAlign: "center",
     fontWeight: "bold",
   },
   signupTitle: {
     textAlign: "right",
     paddingRight: 20,
-    color: "#006d77",
+    color: "#24F384",
   },
+  validationError: { fontSize: 12, color: "#FF285C", paddingLeft: 18 },
 });

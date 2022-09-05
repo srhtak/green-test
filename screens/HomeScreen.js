@@ -42,7 +42,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 23,
+    // paddingTop: 23,
     height: "100%",
     width: "100%",
     flexDirection: "column",

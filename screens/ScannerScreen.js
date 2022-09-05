@@ -99,7 +99,7 @@ export default function Scanner() {
         source={require("../assets/scanner.png")}
         style={styles.scanner}
       />
-      {loading && <ActivityIndicator size="large" color="#00ff00" />}
+      {loading && <ActivityIndicator size="large" color="#24F384" />}
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    backgroundColor: "#000",
   },
   scanner: {
     position: "absolute",
