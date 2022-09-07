@@ -1,10 +1,20 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { setIsTracking } from "../slices/navSlice";
 import * as Animatable from "react-native-animatable";
-import { useNavigation, StackActions } from "@react-navigation/native";
+import {
+  useNavigation,
+  CommonActions,
+} from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 export default function FeedScreen() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setIsTracking(false));
+  }, []);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -59,7 +69,12 @@ export default function FeedScreen() {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          navigation.dispatch(StackActions.popToTop());
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{ name: "Home" }],
+            })
+          );
         }}
       >
         <Text
