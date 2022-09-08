@@ -26,6 +26,7 @@ export default function CameraScreen() {
         base64: false,
         fixOrientation: true,
         exif: true,
+        skipProcessing: false,
       };
       await cameraRef.current.takePictureAsync(options).then((photo) => {
         photo.exif.Orientation = 1;

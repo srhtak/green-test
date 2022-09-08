@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Switch,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -40,6 +41,7 @@ export default function Map() {
   const [frontLight, setFrontLight] = useState(false);
   const [isRearLoading, setRearLoading] = useState(false);
   const [isFrontLoading, setFrontLoading] = useState(false);
+  const [isFinishLoading, setFinishLoading] = useState(false);
   const jwt = useSelector(selectToken);
   const invoice = useSelector(selectInvoice);
   const markerRef = useRef(null);
@@ -102,9 +104,13 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
+    let isCancelled = false;
     fetchBike().catch((error) => {
       console.log(error);
     });
+    return () => {
+      isCancelled = true;
+    };
   }, [fetchBike]);
 
   const frontApiCall = async () => {
@@ -297,6 +303,8 @@ export default function Map() {
     //   setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
     // );
 
+    setFinishLoading(true);
+
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -308,14 +316,16 @@ export default function Map() {
     await axios
       .get(`${API_URL}/Bike/GetInfo?BikeId=${invoice.bikeId}`, config)
       .then((res) => {
-        if (!res.data.value.locked) {
+        if (res.data.value.locked == 0) {
+          setFinishLoading(false);
           Toast.show("Lütfen bisikleti kilitleyin", {
             duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
+            position: Toast.positions.CENTER,
             backgroundColor: "red",
             textColor: "white",
           });
         } else {
+          setFinishLoading(false);
           navigation.navigate("Camera");
         }
       });
@@ -460,14 +470,18 @@ export default function Map() {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            handleRideData();
-          }}
-          style={styles.button}
-        >
-          <Text styles={styles.button_text}>Finish the Ride</Text>
-        </TouchableOpacity>
+        {isFinishLoading ? (
+          <ActivityIndicator size="large" color="#24F384" />
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              handleRideData();
+            }}
+            style={styles.button}
+          >
+            <Text styles={styles.button_text}>Finish the Ride</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
