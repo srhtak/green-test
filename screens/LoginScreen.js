@@ -30,7 +30,6 @@ export default function HomeScreen() {
   }, []);
 
   const onSubmit = async (values) => {
-    console.log(values);
     try {
       setIsLoading(true);
       await axios

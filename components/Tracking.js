@@ -50,6 +50,8 @@ export default function Map() {
   const API_URL = process.env.API_URL;
 
   const fetchBike = useCallback(async () => {
+    setRearLoading(true);
+    setFrontLoading(true);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -67,9 +69,11 @@ export default function Map() {
           res.data.value.lights.front === undefined ||
           res.data.value.lights.front === null
         )
-          console.log(
-            'The API response did not include the front state. Light state will assuming to be "false"'
-          );
+          setFrontLoading(false);
+        setRearLoading(false);
+        console.log(
+          'The API response did not include the front state. Light state will assuming to be "false"'
+        );
 
         if (
           res.data.value === null ||
@@ -77,9 +81,11 @@ export default function Map() {
           res.data.value.lights.rear === undefined ||
           res.data.value.lights.rear === null
         )
-          console.log(
-            'The API response did not include the backlight state. Light state will assuming to be "false"'
-          );
+          setFrontLoading(false);
+        setRearLoading(false);
+        console.log(
+          'The API response did not include the backlight state. Light state will assuming to be "false"'
+        );
 
         setFrontLight(
           res.data.value === null ||
@@ -97,6 +103,8 @@ export default function Map() {
             ? false
             : res.data.value.lights.rear
         );
+        setFrontLoading(false);
+        setRearLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -414,7 +422,15 @@ export default function Map() {
                 size={32}
                 name={"car-light-high"}
               />
-              <Switch onValueChange={toggleRearLight} value={rearLight} />
+              {isRearLoading ? (
+                <ActivityIndicator size="small" color="#FFC107" />
+              ) : (
+                <Switch
+                  disabled={isRearLoading}
+                  onValueChange={toggleRearLight}
+                  value={rearLight}
+                />
+              )}
             </View>
             <View
               style={{
@@ -436,11 +452,15 @@ export default function Map() {
                 size={32}
                 name={"car-light-high"}
               />
-              <Switch
-                disabled={isFrontLoading}
-                onValueChange={toggleFrontLight}
-                value={frontLight}
-              />
+              {isFrontLoading ? (
+                <ActivityIndicator size="small" color="#FFC107" />
+              ) : (
+                <Switch
+                  disabled={isFrontLoading}
+                  onValueChange={toggleFrontLight}
+                  value={frontLight}
+                />
+              )}
             </View>
           </View>
         </View>
