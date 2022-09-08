@@ -306,10 +306,10 @@ export default function Map() {
   }, []);
 
   const handleRideData = async () => {
-    // const time = timerconvert();
-    // dispatch(
-    //   setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
-    // );
+    const time = timerconvert();
+    dispatch(
+      setInvoice({ ...invoice, distance: Number(distance.toFixed(2)), time })
+    );
 
     setFinishLoading(true);
 

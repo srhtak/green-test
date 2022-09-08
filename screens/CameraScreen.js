@@ -1,11 +1,20 @@
 import { Camera, CameraType } from "expo-camera";
 import { useState, useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
 
 export default function CameraScreen() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [isTakingPicture, setIsTakingPicture] = useState(false);
   const navigation = useNavigation();
   const cameraRef = useRef(null);
 
@@ -19,6 +28,7 @@ export default function CameraScreen() {
 
   async function takePicture() {
     console.log("Button Pressed");
+    setIsTakingPicture(true);
     if (cameraRef) {
       console.log("Taking photo");
       const options = {
@@ -29,6 +39,7 @@ export default function CameraScreen() {
         skipProcessing: false,
       };
       await cameraRef.current.takePictureAsync(options).then((photo) => {
+        setIsTakingPicture(false);
         photo.exif.Orientation = 1;
         navigation.navigate("BikeInfo", { photo: photo });
         console.log(photo);
@@ -47,6 +58,26 @@ export default function CameraScreen() {
         style={styles.camera}
         type={type}
       >
+        <View
+          style={{
+            position: "absolute",
+            alignSelf: "center",
+            bottom: "50%",
+            backgroundColor: "#24F384",
+          }}
+        >
+          {isTakingPicture ? (
+            <Text
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                textAlign: "center",
+              }}
+            >
+              Lütfen bekleyiniz...
+            </Text>
+          ) : null}
+        </View>
         <View
           style={{
             position: "absolute",
