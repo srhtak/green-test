@@ -18,6 +18,8 @@ import {
 } from "../slices/navSlice";
 import axios from "axios";
 import * as Animatable from "react-native-animatable";
+import useIsMounted from "../hooks/useIsMounted";
+import Toast from "react-native-root-toast";
 
 export default function Scanner() {
   const API_URL = process.env.API_URL;
@@ -28,6 +30,7 @@ export default function Scanner() {
   const dispatch = useDispatch();
   const invoice = useSelector(selectInvoice);
   const jwt = useSelector(selectToken);
+  const isMountedRef = useIsMounted();
 
   const zoomIn = {
     from: {
@@ -41,21 +44,15 @@ export default function Scanner() {
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      if (isMountedRef.current) {
+        setHasPermission(status === "granted");
+      }
     })();
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    dispatch(setIsTracking(true));
     dispatch(setInvoice({ ...invoice, bikeId: data }));
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [{ name: "Home" }],
-      })
-    );
     setLoading(true);
-    console.log(data);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -67,10 +64,11 @@ export default function Scanner() {
     await axios
       .get(`${API_URL}/Bike/UnLock?BikeId=${data}`, config)
       .then((res) => {
+        console.log(res.data);
         if (res.data.resultTypeId === 200) {
           setLoading(false);
           console.log(res.data);
-          dispatch(setIsTracking({ isTracking: true }));
+          dispatch(setIsTracking(true));
           navigation.dispatch(
             CommonActions.reset({
               index: 1,
@@ -79,7 +77,12 @@ export default function Scanner() {
           );
         } else {
           setLoading(false);
-          console.log(res.data.messageCode);
+          Toast.show("Bisiklet bulunamadı", {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+            backgroundColor: "red",
+            textColor: "white",
+          });
         }
       })
       .catch((error) => {
