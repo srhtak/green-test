@@ -26,6 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import Toast from "react-native-root-toast";
+import useIsMounted from "../hooks/useIsMounted";
 export default function Map() {
   const GOOGLE_MAPS_APIKEY = process.env.GOOGLE_MAPS_APIKEY;
   const { width, height } = Dimensions.get("window");
@@ -48,6 +49,7 @@ export default function Map() {
   const [bikeInfo, setBikeInfo] = useState(invoice);
   const dispatch = useDispatch();
   const API_URL = process.env.API_URL;
+  let isRendered = useRef(false);
 
   const fetchBike = useCallback(async () => {
     setRearLoading(true);
@@ -112,12 +114,14 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    let isCancelled = false;
-    fetchBike().catch((error) => {
-      console.log(error);
-    });
+    isRendered.current = true;
+    if (isRendered.current) {
+      fetchBike().catch((error) => {
+        console.log(error);
+      });
+    }
     return () => {
-      isCancelled = true;
+      isRendered.current = false;
     };
   }, [fetchBike]);
 

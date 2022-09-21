@@ -44,6 +44,7 @@ export default function Map() {
   const jwt = useSelector(selectToken);
   const invoice = useSelector(selectInvoice);
   const [isBikeClicked, setBikeClicked] = useState(false);
+
   useEffect(() => {
     mapRef.current.animateToRegion({
       latitude: origin.location.lat,
